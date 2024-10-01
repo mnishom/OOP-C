@@ -148,9 +148,15 @@ public class Login extends javax.swing.JFrame {
             if(count > 0){
                 //JOptionPane.showMessageDialog(this, "Sukses Login");
                 if(P.getLevel().equals("admin")){
-                    //
+                    AdminPage O = new AdminPage(P);
+                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
+                    this.setVisible(false); 
+                    O.setVisible(true);
                 }else if(P.getLevel().equals("kasir")){
-                    //
+                    KasirPage O = new KasirPage(P);
+                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
+                    this.setVisible(false); 
+                    O.setVisible(true);
                 }else if(P.getLevel().equals("owner")){
                     OwnerPage O = new OwnerPage(P);
                     O.setExtendedState(Frame.MAXIMIZED_BOTH);

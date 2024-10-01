@@ -5,10 +5,13 @@
 package pos;
 
 import java.awt.Frame;
+import java.awt.HeadlessException;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -110,10 +113,27 @@ public class Login extends javax.swing.JFrame {
         String pass = new String(txtPassword.getPassword());
         
         try {
+//            Connection K = Koneksi.Go();
+//            Statement S = K.createStatement();            
+//            String Q = "SELECT * FROM `users` WHERE username='"+user+"' AND password='"+pass+"';";
+//            ResultSet R = S.executeQuery(Q);
+//            int count = 0;
+//            Profile P = new Profile();
+//            while (R.next()) {                 
+//                P.setId(R.getInt("id")); 
+//                P.setFullname(R.getString("fullname")); 
+//                P.setUsername(R.getString("username")); 
+//                P.setPassword(R.getString("password")); 
+//                P.setLevel(R.getString("level")); 
+//                count++;
+//            }
+
             Connection K = Koneksi.Go();
-            Statement S = K.createStatement();
-            String Q = "SELECT * FROM `users` WHERE username='"+user+"' AND password='"+pass+"';";
-            ResultSet R = S.executeQuery(Q);
+            String Q = "SELECT * FROM `users` WHERE username=? AND password=?;";
+            PreparedStatement S = K.prepareStatement(Q);
+            S.setString(1, user);
+            S.setString(2, pass);
+            ResultSet R = S.executeQuery();
             int count = 0;
             Profile P = new Profile();
             while (R.next()) {                 
@@ -142,7 +162,8 @@ public class Login extends javax.swing.JFrame {
                 txtUsername.requestFocus();
             }
             
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
+            System.err.println(e.getMessage());
         }
         
         

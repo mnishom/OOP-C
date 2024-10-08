@@ -76,10 +76,22 @@ public class Login extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/img/x24/man-icon-x24.png"))); // NOI18N
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 70, 20, 30));
+
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 198, 34));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pos/img/x24/key-icon-x24.png"))); // NOI18N
         jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 130, -1, 30));
+
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
         jPanel2.add(txtPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 198, 36));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 322, 10));
 
@@ -108,73 +120,20 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        
-        String user = txtUsername.getText();
-        String pass = new String(txtPassword.getPassword());
-        
-        try {
-//            Connection K = Koneksi.Go();
-//            Statement S = K.createStatement();            
-//            String Q = "SELECT * FROM `users` WHERE username='"+user+"' AND password='"+pass+"';";
-//            ResultSet R = S.executeQuery(Q);
-//            int count = 0;
-//            Profile P = new Profile();
-//            while (R.next()) {                 
-//                P.setId(R.getInt("id")); 
-//                P.setFullname(R.getString("fullname")); 
-//                P.setUsername(R.getString("username")); 
-//                P.setPassword(R.getString("password")); 
-//                P.setLevel(R.getString("level")); 
-//                count++;
-//            }
+        LoginNow();
 
-            Connection K = Koneksi.Go();
-            String Q = "SELECT * FROM `users` WHERE username=? AND password=?;";
-            PreparedStatement S = K.prepareStatement(Q);
-            S.setString(1, user);
-            S.setString(2, pass);
-            ResultSet R = S.executeQuery();
-            int count = 0;
-            Profile P = new Profile();
-            while (R.next()) {                 
-                P.setId(R.getInt("id")); 
-                P.setFullname(R.getString("fullname")); 
-                P.setUsername(R.getString("username")); 
-                P.setPassword(R.getString("password")); 
-                P.setLevel(R.getString("level")); 
-                count++;
-            }
-            
-            if(count > 0){
-                //JOptionPane.showMessageDialog(this, "Sukses Login");
-                if(P.getLevel().equals("admin")){
-                    AdminPage O = new AdminPage(P);
-                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
-                    this.setVisible(false); 
-                    O.setVisible(true);
-                }else if(P.getLevel().equals("kasir")){
-                    KasirPage O = new KasirPage(P);
-                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
-                    this.setVisible(false); 
-                    O.setVisible(true);
-                }else if(P.getLevel().equals("owner")){
-                    OwnerPage O = new OwnerPage(P);
-                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
-                    this.setVisible(false); 
-                    O.setVisible(true); 
-                }
-            }else{
-                JOptionPane.showMessageDialog(this, "Invalid username/password");
-                txtUsername.requestFocus();
-            }
-            
-        } catch (HeadlessException | SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        
-        
-        
+
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+        LoginNow();
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+        // TODO add your handling code here:
+        txtPassword.requestFocus();
+    }//GEN-LAST:event_txtUsernameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -226,4 +185,71 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+
+    private void LoginNow() {
+
+        String user = txtUsername.getText();
+        String pass = new String(txtPassword.getPassword());
+
+        try {
+//            Connection K = Koneksi.Go();
+//            Statement S = K.createStatement();            
+//            String Q = "SELECT * FROM `users` WHERE username='"+user+"' AND password='"+pass+"';";
+//            ResultSet R = S.executeQuery(Q);
+//            int count = 0;
+//            Profile P = new Profile();
+//            while (R.next()) {                 
+//                P.setId(R.getInt("id")); 
+//                P.setFullname(R.getString("fullname")); 
+//                P.setUsername(R.getString("username")); 
+//                P.setPassword(R.getString("password")); 
+//                P.setLevel(R.getString("level")); 
+//                count++;
+//            }
+
+            Connection K = Koneksi.Go();
+            String Q = "SELECT * FROM `users` WHERE username=? AND password=?;";
+            PreparedStatement S = K.prepareStatement(Q);
+            S.setString(1, user);
+            S.setString(2, pass);
+            ResultSet R = S.executeQuery();
+            int count = 0;
+            Profile P = new Profile();
+            while (R.next()) {
+                P.setId(R.getInt("id"));
+                P.setFullname(R.getString("fullname"));
+                P.setUsername(R.getString("username"));
+                P.setPassword(R.getString("password"));
+                P.setLevel(R.getString("level"));
+                count++;
+            }
+
+            if (count > 0) {
+                //JOptionPane.showMessageDialog(this, "Sukses Login");
+                if (P.getLevel().equals("admin")) {
+                    AdminPage O = new AdminPage(P);
+                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
+                    this.setVisible(false);
+                    O.setVisible(true);
+                } else if (P.getLevel().equals("kasir")) {
+                    KasirPage O = new KasirPage(P);
+                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
+                    this.setVisible(false);
+                    O.setVisible(true);
+                } else if (P.getLevel().equals("owner")) {
+                    OwnerPage O = new OwnerPage(P);
+                    O.setExtendedState(Frame.MAXIMIZED_BOTH);
+                    this.setVisible(false);
+                    O.setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid username/password");
+                txtUsername.requestFocus();
+            }
+
+        } catch (HeadlessException | SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+    }
 }

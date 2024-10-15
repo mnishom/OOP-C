@@ -17,7 +17,7 @@ public class Koneksi {
             m.setServerTimezone("Asia/Jakarta"); 
             
             Connection C = m.getConnection();
-            System.out.println("Koneksi sukses");
+//            System.out.println("Koneksi sukses");
             return C;
         } catch (SQLException e) {
             System.err.println("Koneksi Gagal!\n"+

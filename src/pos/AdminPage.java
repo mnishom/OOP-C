@@ -10,18 +10,17 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
-
-
 
 /**
  *
  * @author LABKOM
  */
 public class AdminPage extends javax.swing.JFrame {
-    
+
     Profile p;
+    static DefaultTableModel m;
 
     /**
      * Creates new form AdminPage
@@ -29,17 +28,19 @@ public class AdminPage extends javax.swing.JFrame {
     public AdminPage() {
         initComponents();
         
+        settingTable();        
         viewData("");
     }
-    
+
     public AdminPage(Profile P) {
         initComponents();
 
+        
         this.p = P;
         labelUser.setText(p.getFullname() + "(" + p.getLevel() + ")");
+        settingTable();   
         viewData("");
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,13 +51,13 @@ public class AdminPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         labelUser = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnTambah = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -73,21 +74,31 @@ public class AdminPage extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
         jLabel1.setText("Welcme");
 
         labelUser.setText(" ");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 749, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(544, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(labelUser, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelUser)
+                .addGap(22, 22, 22))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -96,11 +107,26 @@ public class AdminPage extends javax.swing.JFrame {
 
         jPanel5.setPreferredSize(new java.awt.Dimension(680, 70));
 
-        jButton1.setText("Tambah");
+        btnTambah.setText("Tambah");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Ubah");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Hapus");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Refresh");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -127,7 +153,7 @@ public class AdminPage extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jButton1)
+                .addComponent(btnTambah)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -145,7 +171,7 @@ public class AdminPage extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -227,24 +253,80 @@ public class AdminPage extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         HalamanUser H = new HalamanUser();
-        this.setVisible(false); 
-        H.setVisible(true); 
-        H.setExtendedState(Frame.MAXIMIZED_BOTH); 
+        this.setVisible(false);
+        H.setVisible(true);
+        H.setExtendedState(Frame.MAXIMIZED_BOTH);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void txtKeyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKeyKeyReleased
         String key = txtKey.getText();
         String where = "WHERE "
-                + "fullname LIKE '%"+key+"%' OR "
-                + "username LIKE '%"+key+"%' OR "
-                + "password LIKE '%"+key+"%' OR "
-                + "level LIKE '%"+key+"%'";
-        viewData(where); 
+                + "fullname LIKE '%" + key + "%' OR "
+                + "username LIKE '%" + key + "%' OR "
+                + "password LIKE '%" + key + "%' OR "
+                + "level LIKE '%" + key + "%'";
+        viewData(where);
     }//GEN-LAST:event_txtKeyKeyReleased
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        viewData(""); 
+        viewData("");
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        TambahData T = new TambahData(this, true);
+        T.setVisible(true); 
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int n = jTable1.getSelectedRow();
+        if(n != -1){
+            int id = Integer.parseInt(jTable1.getValueAt(n, 1).toString());
+            String fullname = jTable1.getValueAt(n, 2).toString();
+            String username = jTable1.getValueAt(n, 3).toString();
+            String password = jTable1.getValueAt(n, 4).toString();
+            String level = jTable1.getValueAt(n, 5).toString();
+            Ubahdata U = new Ubahdata(this, true);
+            U.setIdUser(id); 
+            U.setFullname(fullname);
+            U.setUsername(username);
+            U.setPassword(password); 
+            U.setLevel(level); 
+            U.setVisible(true); 
+            
+        }else {
+            JOptionPane.showMessageDialog(this, "Anda belum memilih data");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int n = jTable1.getSelectedRow();
+        if(n != -1){
+            int id = Integer.parseInt(jTable1.getValueAt(n, 1).toString());
+            String fullname = jTable1.getValueAt(n, 2).toString();
+            
+            
+            int opsi = JOptionPane.showConfirmDialog(this, 
+                    "Apakah Anda yakin ingin menghapus data "+fullname+"?", 
+                    "Hapus Data", 
+                    JOptionPane.YES_NO_OPTION);
+            if(opsi == 0){
+                String Q = "DELETE FROM users "
+                        + "WHERE id="+id;
+                
+                try {
+                    Connection K = Koneksi.Go();
+                    Statement S = K.createStatement();
+                    S.executeUpdate(Q);
+                    viewData(""); 
+                    JOptionPane.showMessageDialog(this, "Data "+fullname+" telah terhapus");
+                } catch (SQLException e) {
+                }
+            }
+            
+        }else {
+            JOptionPane.showMessageDialog(this, "Anda belum memilih data");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -282,7 +364,7 @@ public class AdminPage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnTambah;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -306,41 +388,46 @@ public class AdminPage extends javax.swing.JFrame {
     private javax.swing.JTextField txtKey;
     // End of variables declaration//GEN-END:variables
 
-    private void viewData(String where) {
+    public static void viewData(String where) {
         try {
             //kode kita
-            DefaultTableModel m = (DefaultTableModel) jTable1.getModel();
-            m.getDataVector().removeAllElements();
-            
+            for (int i = m.getRowCount()-1; i >=0; i--) {
+                m.removeRow(i);
+            }
+
             Connection K = Koneksi.Go();
             Statement S = K.createStatement();
-            String Q = "SELECT * FROM users "+where;
+            String Q = "SELECT * FROM users " + where;
 //            System.out.println(Q);
             ResultSet R = S.executeQuery(Q);
-            int no=1;
-            while (R.next()) {                 
+            int no = 1;
+            while (R.next()) {
                 int id = R.getInt("id");
                 String fullname = R.getString("fullname");
                 String username = R.getString("username");
                 String password = R.getString("password");
                 String level = R.getString("level");
-                
-                Object[] D = {no, id, fullname, username, password,level};
-                m.addRow(D); 
-                
-                no++;	 	
+
+                Object[] D = {no, id, fullname, username, password, level};
+                m.addRow(D);
+
+                no++;
             }
-//            jTable1.getColumnModel().getColumn(0).setMinWidth(50);
-//            jTable1.getColumnModel().getColumn(0).setMaxWidth(70);
-//            
-//            jTable1.getColumnModel().getColumn(1).setMinWidth(0);
-//            jTable1.getColumnModel().getColumn(1).setMaxWidth(0);
-//            
-//            jTable1.getColumnModel().getColumn(2).setMinWidth(350);
-//            jTable1.getColumnModel().getColumn(2).setMaxWidth(500);
-            
         } catch (SQLException e) {
             //error handling
         }
     }
+
+    private void settingTable() {
+        m = (DefaultTableModel) jTable1.getModel();        
+        jTable1.getColumnModel().getColumn(0).setMinWidth(50);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(70);
+
+        jTable1.getColumnModel().getColumn(1).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(1).setMaxWidth(0);
+
+        jTable1.getColumnModel().getColumn(2).setMinWidth(350);
+        jTable1.getColumnModel().getColumn(2).setMaxWidth(500);
+    }
+
 }

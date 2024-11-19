@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 /**
@@ -28,6 +29,12 @@ public class TambahProduk extends javax.swing.JDialog {
         
         showProductCategory();
         showSupplier();
+        
+        genereateCode();
+        
+        JButton x = btnX;
+        x.setText("XYZ"); 
+        
     }
 
     /**
@@ -60,6 +67,7 @@ public class TambahProduk extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        btnX = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -135,13 +143,15 @@ public class TambahProduk extends javax.swing.JDialog {
             }
         });
 
+        btnX.setText("X");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,8 +190,10 @@ public class TambahProduk extends javax.swing.JDialog {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton1))
                                     .addComponent(cmbKategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(btnX)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)))
@@ -213,7 +225,6 @@ public class TambahProduk extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cmbSupplier)
                         .addGap(4, 4, 4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtHargaJual, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -227,11 +238,16 @@ public class TambahProduk extends javax.swing.JDialog {
                     .addComponent(txtStok, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(btnX)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -339,6 +355,7 @@ public class TambahProduk extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnX;
     private javax.swing.JComboBox<String> cmbKategori;
     private javax.swing.JComboBox<String> cmbSupplier;
     private javax.swing.JButton jButton1;
@@ -399,6 +416,36 @@ public class TambahProduk extends javax.swing.JDialog {
         char c = evt.getKeyChar();
         if(!Character.isDigit(c)){
             evt.consume();
+        }
+    }
+
+    private void genereateCode() {
+        try {
+            Connection K = Koneksi.Go();
+            String Q = "SELECT product_code AS k FROM `products`ORDER BY id DESC LIMIT 1;";
+            Statement S = K.createStatement();
+            ResultSet R = S.executeQuery(Q);
+            String kodeBaru = "";
+            while (R.next()) {                
+                String Kode = R.getString("k");
+                //P00005
+                int n = Integer.parseInt(Kode.substring(1))+1;
+                if(n < 10){
+                    kodeBaru = "P0000"+n;
+                }else if(n > 9 && n < 100){
+                    kodeBaru = "P000"+n;
+                }else if(n > 99 && n < 1000){
+                    kodeBaru = "P00"+n;
+                }else if(n > 999 && n < 10000){
+                    kodeBaru = "P0"+n;
+                }else if(n > 9999 && n < 10000){
+                    kodeBaru = "P"+n;
+                }
+                txtKode.setText(kodeBaru); 
+            }
+        } catch (NumberFormatException | SQLException e) {
+            System.out.println(e.getMessage());
+            Functions.saveLog("TambahProduct.java Line: 434, Gagal menambah produk. Error: "+e.getMessage()); 
         }
     }
 

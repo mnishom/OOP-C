@@ -56,7 +56,7 @@ public class KasirPage extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtUangBayar = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lbluangKembali = new javax.swing.JLabel();
         tombolCheckout = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -115,7 +115,7 @@ public class KasirPage extends javax.swing.JFrame {
 
         lblTotalHarga.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblTotalHarga.setForeground(new java.awt.Color(0, 0, 255));
-        lblTotalHarga.setText("jLabel3");
+        lblTotalHarga.setText("Rp. 0,-");
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Total Harga: ");
@@ -132,9 +132,9 @@ public class KasirPage extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Kembali: ");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 153, 51));
-        jLabel6.setText("jLabel6");
+        lbluangKembali.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbluangKembali.setForeground(new java.awt.Color(0, 153, 51));
+        lbluangKembali.setText("Rp 0,-");
 
         tombolCheckout.setBackground(new java.awt.Color(255, 102, 0));
         tombolCheckout.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -157,7 +157,7 @@ public class KasirPage extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUangBayar)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbluangKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(tombolCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
@@ -178,7 +178,7 @@ public class KasirPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6)))
+                            .addComponent(lbluangKembali)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(tombolCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -322,13 +322,13 @@ public class KasirPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel labelUser;
     private javax.swing.JLabel lblTotalHarga;
+    private javax.swing.JLabel lbluangKembali;
     private javax.swing.JButton tombolCheckout;
     private javax.swing.JTextField txtProduk;
     private javax.swing.JTextField txtUangBayar;
@@ -375,13 +375,16 @@ public class KasirPage extends javax.swing.JFrame {
             if (!bayar.isEmpty()) {
                 long uangbayar = Long.parseLong(bayar);
                 long uangkembali = uangbayar - harga;
-                jLabel6.setText("Rp "+uangkembali); 
+                lbluangKembali.setText("Rp "+uangkembali); 
                 
                 if(uangbayar >= harga){
                     tombolCheckout.setEnabled(true); 
                 }else {
                     tombolCheckout.setEnabled(false); 
                 }
+            }else{
+                lbluangKembali.setText("Rp "+0);
+                tombolCheckout.setEnabled(false); 
             }
         }
     }

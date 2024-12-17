@@ -46,9 +46,9 @@ public class Latihan1 {
 
     public static void main(String[] args) {
         JFreeChart chart = ChartFactory.createBarChart(
-                "Multi-Series Bar Chart", // Chart title
-                "Category", // X-axis Label
-                "Value", // Y-axis Label
+                "Data Transaksi Bulan Januari-Maret", // Chart title
+                "Kategoi", // X-axis Label
+                "Jumlah Data", // Y-axis Label
                 createDataset(),
                 PlotOrientation.VERTICAL, // Orientation (vertical)
                 true, // Include legend
